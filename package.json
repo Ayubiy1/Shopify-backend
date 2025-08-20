@@ -4,6 +4,7 @@
   "description": "online shop market",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "dev": "nodemon src/index.js"
   },
   "repository": {
