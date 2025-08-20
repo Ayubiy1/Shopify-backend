@@ -1,0 +1,31 @@
+{
+  "name": "online-shop",
+  "version": "1.0.0",
+  "description": "online shop market",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ayubiy1/Shopify-backend.git"
+  },
+  "author": "Muhammad Ayubiy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ayubiy1/Shopify-backend/issues"
+  },
+  "homepage": "https://github.com/Ayubiy1/Shopify-backend#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.18.0",
+    "mongoose": "^8.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
