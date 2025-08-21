@@ -1,4 +1,3 @@
-// models/Category.js
 const mongoose = require("mongoose");
 
 const categorySchema = new mongoose.Schema(
@@ -11,6 +10,7 @@ const categorySchema = new mongoose.Schema(
     },
     description: {
       type: String,
+      trim: true,
     },
     image: {
       type: String, // category rasmi (banner)
@@ -20,3 +20,26 @@ const categorySchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Category", categorySchema);
+
+// // models/Category.js
+// const mongoose = require("mongoose");
+
+// const categorySchema = new mongoose.Schema(
+//   {
+//     name: {
+//       type: String,
+//       required: true,
+//       unique: true,
+//       trim: true,
+//     },
+//     description: {
+//       type: String,
+//     },
+//     image: {
+//       type: String, // category rasmi (banner)
+//     },
+//   },
+//   { timestamps: true }
+// );
+
+// module.exports = mongoose.model("Category", categorySchema);
