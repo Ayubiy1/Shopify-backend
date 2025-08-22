@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const users = await User.find().select("-password"); // parolni chiqarib tashlaymiz
-    console.log(users);
+    // console.log(users);
 
     res.json(users);
   } catch (error) {
@@ -28,7 +28,7 @@ router.get("/:id", async (req, res) => {
 
 // Userni malumotlarini yagilash / update Put
 router.put("/:id", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
 
   try {
     const { fullName, email, role } = req.body;
