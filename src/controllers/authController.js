@@ -85,6 +85,7 @@ exports.login = async (req, res) => {
     },
   });
 };
+
 // 2️⃣ Frontendda ikkisini saqlash
 // js
 // Copy

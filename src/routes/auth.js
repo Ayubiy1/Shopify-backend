@@ -10,7 +10,7 @@ const router = express.Router();
 // 🔑 Access va Refresh token yaratish funksiyalari
 const generateAccessToken = (user) => {
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: "15m", // qisqa muddat
+    expiresIn: "1h", // qisqa muddat
   });
 };
 
@@ -22,7 +22,7 @@ const generateRefreshToken = (user) => {
 
 // 📌 ME route
 router.get("/me", authMiddleware, (req, res) => {
-  console.log(req);
+  // console.log(req);
 
   res.json(req.user); // foydalanuvchini qaytaradi (id, email, role va h.k.)
 });
@@ -44,7 +44,7 @@ router.post("/register", async (req, res) => {
       fullName,
       email,
       password: hashedPassword,
-      role,
+      role: "admin",
     });
 
     await newUser.save();

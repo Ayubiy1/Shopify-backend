@@ -12,10 +12,12 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     image: String,
-    category: {
+    categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
+      required: true,
     },
+
     inStock: { type: Boolean, default: true },
     images: [
       {

@@ -6,6 +6,9 @@ require("dotenv").config();
 
 const authRoutes = require("./routes/auth"); // auth.js router
 const userRoutes = require("./routes/userRoutes"); // agar users.js bo‘lsa shu yerga
+const categoryRoutes = require("./routes/categoryRoutes");
+const productRoutes = require("./routes/productRoutes");
+const coruselRoutes = require("./routes/corusel");
 
 const app = express();
 
@@ -24,6 +27,9 @@ app.use(
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/corusel", coruselRoutes);
 
 // MongoDB connect
 mongoose

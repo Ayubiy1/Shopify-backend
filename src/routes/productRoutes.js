@@ -5,10 +5,12 @@ const {
   authMiddleware,
   adminMiddleware,
   sellerMiddleware,
-} = require("../middlewares/auth");
+} = require("../middleware/authMiddleware");
 
 // CREATE product (Seller yoki Admin)
 router.post("/", authMiddleware, sellerMiddleware, async (req, res) => {
+  console.log(req.body);
+
   try {
     const product = new Product({
       ...req.body,
@@ -36,8 +38,11 @@ router.get("/", async (req, res) => {
 
 // UPDATE product
 router.put("/:id", authMiddleware, sellerMiddleware, async (req, res) => {
+  console.log(req.params.id);
+
   try {
     const product = await Product.findById(req.params.id);
+    console.log(product);
 
     if (!product) return res.status(404).json({ message: "Product not found" });
 
@@ -83,7 +88,7 @@ router.delete("/:id", authMiddleware, sellerMiddleware, async (req, res) => {
   }
 });
 
-// filter 
+// filter
 router.get("/", async (req, res) => {
   try {
     const { search, category, minPrice, maxPrice } = req.query;
