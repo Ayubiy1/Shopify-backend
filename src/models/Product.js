@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
 
-    inStock: { type: Boolean, default: true },
+    inStock: { type: Boolean, default: true }, 
     images: [
       {
         type: String, // product rasmlari
@@ -28,6 +28,13 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    colors: [
+      {
+        colorName: String, // Masalan: “Gold”, "Black", "Blue"
+        images: [String], // Shu rangga tegishli rasmlar
+        stock: Number, // Shu rang bo‘yicha qoldiq
+      },
+    ],
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

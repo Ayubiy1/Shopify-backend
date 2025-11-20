@@ -3,7 +3,6 @@ const router = express.Router();
 const Product = require("../models/Product");
 const {
   authMiddleware,
-  adminMiddleware,
   sellerMiddleware,
 } = require("../middleware/authMiddleware");
 
@@ -124,62 +123,76 @@ router.get("/", async (req, res) => {
   }
 });
 
+// search product
+router.get("/search", async (res, req) => {
+  try {
+    const { q } = req.query;
+    if (!q || q.trim() === "")
+      return res.status(400).json({ message: "Search query is required" });
+
+    const products = await Product.find({
+      $or: [
+        { name: { $regex: q, $options: "i" } },
+        { description: { $regex: q, $options: "i" } },
+      ],
+    });
+
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
 module.exports = router;
 
-// const express = require("express");
-// const User = require("../models/User"); // User modelini import qiling
-// const Product = require("../models/Product");
-// const router = express.Router();
-
-// // Product qo'shish
-// router.post("/", async (req, res) => {
-//   try {
-//     const newProduct = new Product({
-//       ...req.body,
-//       owner: req.user._id,
-//     });
-
-//     await newProduct.save();
-//     res.status(201).json(newProduct);
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error", error });
-//   }
-// });
-
-// // Product larni olish
-// router.get("/", async (req, res) => {
-//   try {
-//     const products = await Product.find();
-
-//     res.json(products);
-//     //
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error", error });
-//   }
-// });
-
-// // ID orqali product ni olish
-// router.get("/:id", async (req, res) => {
-//   try {
-//     const product = await Product.findById(req.params.id);
-//     if (!product) res.status(404).json({ message: "Product not found" });
-
-//     res.json(product);
-//     //
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error", error });
-//   }
-// });
-
-// // Productni ochirish
-// router.delete("/:id", async (req, res) => {
-//   try {
-//     const product = await Product.findOneAndDelete(req.params.id);
-//     if (!product) return res.status(404).json({ message: "Product not found" });
-
-//     res.json({ message: "Product deleted successfully" });
-//     //
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error", error });
-//   }
-// });
+{
+  // const express = require("express");
+  // const User = require("../models/User"); // User modelini import qiling
+  // const Product = require("../models/Product");
+  // const router = express.Router();
+  // // Product qo'shish
+  // router.post("/", async (req, res) => {
+  //   try {
+  //     const newProduct = new Product({
+  //       ...req.body,
+  //       owner: req.user._id,
+  //     });
+  //     await newProduct.save();
+  //     res.status(201).json(newProduct);
+  //   } catch (error) {
+  //     res.status(500).json({ message: "Server error", error });
+  //   }
+  // });
+  // // Product larni olish
+  // router.get("/", async (req, res) => {
+  //   try {
+  //     const products = await Product.find();
+  //     res.json(products);
+  //     //
+  //   } catch (error) {
+  //     res.status(500).json({ message: "Server error", error });
+  //   }
+  // });
+  // // ID orqali product ni olish
+  // router.get("/:id", async (req, res) => {
+  //   try {
+  //     const product = await Product.findById(req.params.id);
+  //     if (!product) res.status(404).json({ message: "Product not found" });
+  //     res.json(product);
+  //     //
+  //   } catch (error) {
+  //     res.status(500).json({ message: "Server error", error });
+  //   }
+  // });
+  // // Productni ochirish
+  // router.delete("/:id", async (req, res) => {
+  //   try {
+  //     const product = await Product.findOneAndDelete(req.params.id);
+  //     if (!product) return res.status(404).json({ message: "Product not found" });
+  //     res.json({ message: "Product deleted successfully" });
+  //     //
+  //   } catch (error) {
+  //     res.status(500).json({ message: "Server error", error });
+  //   }
+  // });
+}
