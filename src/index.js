@@ -9,6 +9,7 @@ const userRoutes = require("./routes/userRoutes"); // agar users.js bo‘lsa shu
 const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
 const coruselRoutes = require("./routes/corusel");
+const korzinkaRouter = require("./routes/korzinkaRouter");
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(
 );
 
 // Routes
+app.use("/api/cart", korzinkaRouter);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
