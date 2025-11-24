@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
 
-    inStock: { type: Boolean, default: true }, 
+    inStock: { type: Boolean, default: true },
     images: [
       {
         type: String, // product rasmlari

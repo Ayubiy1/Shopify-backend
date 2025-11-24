@@ -20,6 +20,15 @@ const generateRefreshToken = (user) => {
   });
 };
 
+// router.get("/me", authMiddleware, async (req, res) => {
+//   try {
+//     const items = await Cart.find({ userId: req.user._id });
+//     res.json(items);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
 // 📌 ME route
 router.get("/me", authMiddleware, (req, res) => {
   // console.log(req);
