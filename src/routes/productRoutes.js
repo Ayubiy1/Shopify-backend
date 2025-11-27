@@ -8,13 +8,16 @@ const {
 
 // CREATE product (Seller yoki Admin)
 router.post("/", authMiddleware, sellerMiddleware, async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
 
   try {
     const product = new Product({
       ...req.body,
       owner: req.user._id, // Sellerga bog‘lash
     });
+
+    console.log(product);
+
     await product.save();
     res.status(201).json(product);
   } catch (error) {
@@ -35,13 +38,27 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+
+    if (!product) return res.status(404).json({ message: "Product topilmadi" });
+
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
 // UPDATE product
 router.put("/:id", authMiddleware, sellerMiddleware, async (req, res) => {
   console.log(req.params.id);
 
   try {
     const product = await Product.findById(req.params.id);
-    console.log(product);
+    console.log("product", product);
 
     if (!product) return res.status(404).json({ message: "Product not found" });
 
