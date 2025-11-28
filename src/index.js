@@ -20,7 +20,9 @@ app.use(cookieParser());
 // CORS setup
 app.use(
   cors({
-    origin: "https://shopify-steel-two.vercel.app/", // frontend manzili
+    origin:
+      "https://shopify-steel-two.vercel.app/" ||
+      "https://shopify-n99b9eeo7-my-projects-0f0d51d0.vercel.app/", // frontend manzili
     credentials: true, // cookie yuborishga ruxsat
   })
 );
