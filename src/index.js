@@ -20,20 +20,17 @@ app.use(cookieParser());
 // CORS setup
 app.use(
   cors({
-    origin: [
-      "https://shopify-steel-two.vercel.app",
-      "https://shopify-n99b9eeo7-my-projects-0f0d51d0.vercel.app",
-    ],
+    origin: ["https://shopify-steel-two.vercel.app"],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
 // app.use(
 //   cors({
-//     origin:
-//       "https://shopify-steel-two.vercel.app/" ||
-//       "https://shopify-n99b9eeo7-my-projects-0f0d51d0.vercel.app/", // frontend manzili
-//     credentials: true, // cookie yuborishga ruxsat
+//     origin: ["https://shopify-steel-two.vercel.app"],
+//     credentials: true,
 //   })
 // );
 
