@@ -9,8 +9,10 @@ const router = express.Router();
 
 // TOKEN GENERATORS
 const generateAccessToken = (user) => {
+  console.log(user);
+
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
+    expiresIn: "15m",
   });
 };
 
@@ -76,15 +78,16 @@ router.post("/login", async (req, res) => {
     user.refreshToken = refreshToken;
     await user.save();
 
-    // 🍪 COOKIE: Vercel → Render uchun to‘g‘ri sozlama
+    // 🍪 COOKIE
     res.cookie("token", accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 60 * 60 * 1000, // 1 hour
+      maxAge: 60 * 60 * 1000,
     });
 
     return res.json({
+      accessToken, // 🔥 TOKEN FRONTENDGA KETADI!
       refreshToken,
       user: {
         id: user._id,
@@ -98,6 +101,45 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+// router.post("/login", async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+
+//     const user = await User.findOne({ email: email.toLowerCase() });
+//     if (!user) return res.status(400).json({ message: "Email topilmadi" });
+
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) return res.status(400).json({ message: "Parol noto'g'ri" });
+
+//     const accessToken = generateAccessToken(user);
+//     const refreshToken = generateRefreshToken(user);
+
+//     user.refreshToken = refreshToken;
+//     await user.save();
+
+//     // 🍪 COOKIE: Vercel → Render uchun to‘g‘ri sozlama
+//     res.cookie("token", accessToken, {
+//       httpOnly: true,
+//       secure: true,
+//       sameSite: "none",
+//       maxAge: 60 * 60 * 1000, // 1 hour
+//     });
+
+//     return res.json({
+//       refreshToken,
+//       user: {
+//         id: user._id,
+//         fullName: user.fullName,
+//         email: user.email,
+//         role: user.role,
+//       },
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
 
 // REFRESH TOKEN
 router.post("/refresh-token", async (req, res) => {
