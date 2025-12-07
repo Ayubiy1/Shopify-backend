@@ -11,6 +11,7 @@ const productRoutes = require("./routes/productRoutes");
 const coruselRoutes = require("./routes/corusel");
 const korzinkaRouter = require("./routes/korzinkaRouter");
 const adminPanelRouter = require("./routes/adminPanelRouter");
+const User = require("./models/User");
 
 const app = express();
 

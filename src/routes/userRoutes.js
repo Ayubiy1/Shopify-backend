@@ -1,6 +1,33 @@
 const express = require("express");
+// const { OAuth2Client } = require("google-auth-library");
+// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 const User = require("../models/User"); // User modelini import qiling
 const router = express.Router();
+
+// router.post("/auth/google", async (req, res) => {
+//   const { token } = req.body;
+//   console.log(token);
+
+//   try {
+//     const ticket = await client.verifyIdToken({
+//       idToken: token,
+//       audience: process.env.GOOGLE_CLIENT_ID,
+//     });
+//     const payload = ticket.getPayload();
+//     const { email, name, sub: googleId } = payload;
+
+//     // Foydalanuvchini tekshirish yoki yaratish
+//     let user = await User.findOne({ email });
+//     if (!user) {
+//       user = await User.create({ name, email, googleId });
+//     }
+
+//     res.json(user);
+//   } catch (err) {
+//     res.status(401).json({ message: "Invalid token" });
+//   }
+// });
 
 // Barcha userlarni olish (faqat admin uchun bo'lishi mumkin)
 router.get("/", async (req, res) => {
