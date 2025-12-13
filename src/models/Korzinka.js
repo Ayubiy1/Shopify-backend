@@ -9,6 +9,7 @@ const cartSchema = new mongoose.Schema(
     },
     count: Number,
     productId: String,
+    variantId: String,
     title: String,
     images: [String], // variantning 1 yoki ko‘p rasmi
     price: Number,

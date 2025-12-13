@@ -16,7 +16,7 @@ router.post("/", authMiddleware, sellerMiddleware, async (req, res) => {
       owner: req.user._id, // Sellerga bog‘lash
     });
 
-    console.log(product);
+    // console.log(product);
 
     await product.save();
     res.status(201).json(product);
@@ -54,11 +54,10 @@ router.get("/:id", async (req, res) => {
 
 // UPDATE product
 router.put("/:id", authMiddleware, sellerMiddleware, async (req, res) => {
-  console.log(req.params.id);
+  // console.log(req.params.id);
 
   try {
     const product = await Product.findById(req.params.id);
-    console.log("product", product);
 
     if (!product) return res.status(404).json({ message: "Product not found" });
 

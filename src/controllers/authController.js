@@ -70,7 +70,7 @@ exports.login = async (req, res) => {
 
   // tokenlar yaratish
   const accessToken = generateAccessToken(user._id);
-  console.log(accessToken);
+  // console.log(accessToken);
 
   const refreshToken = generateRefreshToken(user._id);
 
@@ -116,8 +116,6 @@ exports.logout = (req, res) => {
 
 // Get current user
 exports.getMe = async (req, res) => {
-  console.log(req);
-
   try {
     const user = await User.findById(req.user.id).select("-password");
     if (!user)

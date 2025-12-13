@@ -37,6 +37,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/corusel", coruselRoutes);
+// app.use("/api/orders", require("./routes/orderRoutes"));
+app.use("/api/stock-history", require("./routes/stockHistoryRoutes"));
 
 // MongoDB connect
 mongoose

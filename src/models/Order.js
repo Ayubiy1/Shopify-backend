@@ -31,17 +31,17 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
       default: "pending",
     },
-    shippingAddress: {
-      fullName: String,
-      phone: String,
-      city: String,
-      address: String,
-      postalCode: String,
-    },
+    // shippingAddress: {
+    //   fullName: String,
+    //   phone: String,
+    //   city: String,
+    //   address: String,
+    //   postalCode: String,
+    // },
     paymentMethod: {
       type: String,
-      enum: ["cash_on_delivery", "credit_card", "paypal"],
-      default: "cash_on_delivery",
+      enum: ["naqt", "karta"],
+      default: "karta",
     },
   },
   { timestamps: true }
