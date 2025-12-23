@@ -3,37 +3,17 @@ const express = require("express");
 // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const User = require("../models/User"); // User modelini import qiling
+const { authMiddleware } = require("../middleware/authMiddleware");
 const router = express.Router();
 
-// router.post("/auth/google", async (req, res) => {
-//   const { token } = req.body;
-//   console.log(token);
-
-//   try {
-//     const ticket = await client.verifyIdToken({
-//       idToken: token,
-//       audience: process.env.GOOGLE_CLIENT_ID,
-//     });
-//     const payload = ticket.getPayload();
-//     const { email, name, sub: googleId } = payload;
-
-//     // Foydalanuvchini tekshirish yoki yaratish
-//     let user = await User.findOne({ email });
-//     if (!user) {
-//       user = await User.create({ name, email, googleId });
-//     }
-
-//     res.json(user);
-//   } catch (err) {
-//     res.status(401).json({ message: "Invalid token" });
-//   }
-// });
+router.get("/me", authMiddleware, (req, res) => {
+  res.json(req.user); // 🔥 token orqali topilgan user
+});
 
 // Barcha userlarni olish (faqat admin uchun bo'lishi mumkin)
 router.get("/", async (req, res) => {
   try {
     const users = await User.find().select("-password"); // parolni chiqarib tashlaymiz
-    // console.log(users);
 
     res.json(users);
   } catch (error) {
@@ -55,13 +35,13 @@ router.get("/:id", async (req, res) => {
 
 // Userni malumotlarini yagilash / update Put
 router.put("/:id", async (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
+  console.log(req.params.id);
 
   try {
-    const { fullName, email, role } = req.body;
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-    }).select("-password");
+    });
 
     if (!updatedUser)
       return res.status(404).json({ message: "User not found" });
@@ -88,3 +68,25 @@ router.delete("/:id", async (req, res) => {
 });
 
 module.exports = router;
+
+{
+  // router.post("/auth/google", async (req, res) => {
+  //   const { token } = req.body;
+  //   try {
+  //     const ticket = await client.verifyIdToken({
+  //       idToken: token,
+  //       audience: process.env.GOOGLE_CLIENT_ID,
+  //     });
+  //     const payload = ticket.getPayload();
+  //     const { email, name, sub: googleId } = payload;
+  //     // Foydalanuvchini tekshirish yoki yaratish
+  //     let user = await User.findOne({ email });
+  //     if (!user) {
+  //       user = await User.create({ name, email, googleId });
+  //     }
+  //     res.json(user);
+  //   } catch (err) {
+  //     res.status(401).json({ message: "Invalid token" });
+  //   }
+  // });
+}

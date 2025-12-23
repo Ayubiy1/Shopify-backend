@@ -55,6 +55,7 @@ router.post("/buy", async (req, res) => {
     variant.numberSold = (variant.numberSold || 0) + quantity;
 
     // === STOCK HISTORY YOZISH ===
+
     const history = await StockHistory.create({
       productId: foundProduct._id,
       variantId: variantId || null,
