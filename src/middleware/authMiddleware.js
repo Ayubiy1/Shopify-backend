@@ -29,27 +29,6 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-// const authMiddleware = async (req, res, next) => {
-//   const token = req.header("Authorization")?.replace("Bearer ", "");
-//   if (!token) return res.status(401).json({ message: "Token topilmadi" });
-
-//   try {
-//     // Tokenni tekshirish
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-//     // decoded ichida userId bo‘lishi kerak
-//     req.user = await User.findById(decoded.userId).select("-password");
-
-//     if (!req.user) {
-//       return res.status(401).json({ message: "Foydalanuvchi topilmadi" });
-//     }
-
-//     next();
-//   } catch (error) {
-//     return res.status(401).json({ message: "Xato token" });
-//   }
-// };
-
 // Admin
 
 const adminMiddleware = (req, res, next) => {
