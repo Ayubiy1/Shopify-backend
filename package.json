@@ -11,6 +11,9 @@
     "type": "git",
     "url": "git+https://github.com/Ayubiy1/Shopify-backend.git"
   },
+  "engines": {
+    "node": "20.x"
+  },
   "author": "Muhammad Ayubiy",
   "license": "ISC",
   "bugs": {
