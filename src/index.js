@@ -1,8 +1,13 @@
+// index.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-require("dotenv").config();
+
+// dotenv faqat localda ishlaydi, Koyeb deploy uchun Environment Variables ishlatiladi
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/userRoutes");
@@ -11,8 +16,8 @@ const productRoutes = require("./routes/productRoutes");
 const coruselRoutes = require("./routes/corusel");
 const korzinkaRouter = require("./routes/korzinkaRouter");
 const adminPanelRouter = require("./routes/adminPanelRouter");
-const User = require("./models/User");
 
+// Express app
 const app = express();
 
 // Middlewares
@@ -20,7 +25,7 @@ app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// CORS setup
+// CORS
 app.use(
   cors({
     origin: ["https://shopify-steel-two.vercel.app", "http://localhost:5173"],
@@ -38,16 +43,77 @@ app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/corusel", coruselRoutes);
-// app.use("/api/orders", require("./routes/orderRoutes"));
 app.use("/api/stock-history", require("./routes/stockHistoryRoutes"));
 
-// MongoDB connect
+// MongoDB connection
+const MONGO_URI = process.env.MONGO_URI;
+const PORT = process.env.PORT || 3000;
+
+if (!MONGO_URI) {
+  console.error(
+    "❌ MONGO_URI is not defined! Set it in Environment Variables."
+  );
+  process.exit(1); // serverni to‘xtatadi
+}
+
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(MONGO_URI)
   .then(() => {
     console.log("✅ MongoDB connected");
-    app.listen(process.env.PORT || 3000, () =>
-      console.log(`🚀 Server running on port ${process.env.PORT || 3000}`)
-    );
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
   })
   .catch((err) => console.error("❌ MongoDB connection error:", err));
+
+// const express = require("express");
+// const mongoose = require("mongoose");
+// const cors = require("cors");
+// const cookieParser = require("cookie-parser");
+// require("dotenv").config();
+
+// const authRoutes = require("./routes/auth");
+// const userRoutes = require("./routes/userRoutes");
+// const categoryRoutes = require("./routes/categoryRoutes");
+// const productRoutes = require("./routes/productRoutes");
+// const coruselRoutes = require("./routes/corusel");
+// const korzinkaRouter = require("./routes/korzinkaRouter");
+// const adminPanelRouter = require("./routes/adminPanelRouter");
+// const User = require("./models/User");
+
+// const app = express();
+
+// // Middlewares
+// app.use(cookieParser());
+// app.use(express.json({ limit: "10mb" }));
+// app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+// // CORS setup
+// app.use(
+//   cors({
+//     origin: ["https://shopify-steel-two.vercel.app", "http://localhost:5173"],
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// );
+
+// // Routes
+// app.use("/api/cart", korzinkaRouter);
+// app.use("/api/admin", adminPanelRouter);
+// app.use("/api/auth", authRoutes);
+// app.use("/api/users", userRoutes);
+// app.use("/api/categories", categoryRoutes);
+// app.use("/api/products", productRoutes);
+// app.use("/api/corusel", coruselRoutes);
+// // app.use("/api/orders", require("./routes/orderRoutes"));
+// app.use("/api/stock-history", require("./routes/stockHistoryRoutes"));
+
+// // MongoDB connect
+// mongoose
+//   .connect(process.env.MONGO_URI)
+//   .then(() => {
+//     console.log("✅ MongoDB connected");
+//     app.listen(process.env.PORT || 3000, () =>
+//       console.log(`🚀 Server running on port ${process.env.PORT || 3000}`)
+//     );
+//   })
+//   .catch((err) => console.error("❌ MongoDB connection error:", err));
