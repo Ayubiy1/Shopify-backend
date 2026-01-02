@@ -1,6 +1,7 @@
 const express = require("express");
 // const { OAuth2Client } = require("google-auth-library");
 // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const bcrypt = require("bcryptjs");
 
 const User = require("../models/User"); // User modelini import qiling
 const { authMiddleware } = require("../middleware/authMiddleware");
@@ -35,24 +36,56 @@ router.get("/:id", async (req, res) => {
 
 // Userni malumotlarini yagilash / update Put
 router.put("/:id", async (req, res) => {
-  console.log(req.body);
-  console.log(req.params.id);
-
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: "User ID required" });
+    }
+
+    const updateData = { ...req.body };
+
+    if (updateData.password?.trim()) {
+      const salt = await bcrypt.genSalt(10);
+      updateData.password = await bcrypt.hash(updateData.password, salt);
+    } else {
+      delete updateData.password;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
       new: true,
     });
 
-    if (!updatedUser)
+    if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
+    }
 
     res.json(updatedUser);
-
-    //
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("❌ UPDATE USER ERROR:", error);
+    res.status(500).json({ message: error.message });
   }
 });
+
+// router.put("/:id", async (req, res) => {
+//   console.log(req.body);
+//   console.log(req.params.id);
+
+//   try {
+//     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+//       new: true,
+//     });
+
+//     if (!updatedUser)
+//       return res.status(404).json({ message: "User not found" });
+
+//     res.json(updatedUser);
+
+//     //
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
 
 // Userni o'chirish
 router.delete("/:id", async (req, res) => {
