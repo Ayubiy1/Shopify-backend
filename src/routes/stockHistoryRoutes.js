@@ -69,7 +69,7 @@ router.post("/", authMiddleware, async (req, res) => {
       }
 
       // 2) stock -= quantity
-      product?.stock -= item.quantity;
+      product.stock -= item.quantity;
 
       // 3) numberSold += quantity
       product.numberSold = (product.numberSold || 0) + item.quantity;
