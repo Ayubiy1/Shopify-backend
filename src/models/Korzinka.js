@@ -17,6 +17,7 @@ const cartSchema = new mongoose.Schema(
       color: String,
       size: String,
     },
+    ownerId: String,
   },
   { timestamps: true }
 );

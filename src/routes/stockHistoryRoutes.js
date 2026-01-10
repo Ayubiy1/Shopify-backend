@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { authMiddleware } = require("../middleware/authMiddleware");
+const jwt = require("jsonwebtoken");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 const StockHistory = require("../models/StockHistory");
@@ -12,6 +13,29 @@ router.get("/", async (req, res) => {
     res.json(data);
   } catch (e) {
     res.status(500).json({ message: "Error", e });
+  }
+});
+
+router.get("/seller", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ message: "Token yo‘q" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // const sellerId = decoded.id; // yoki decoded._id
+
+    const data = await StockHistory.find({ sellerId: decoded.id });
+
+    res.json(data);
+  } catch (e) {
+    res.status(401).json({
+      message: "Token xato yoki muddati tugagan",
+      error: e.message,
+    });
   }
 });
 
@@ -45,7 +69,7 @@ router.post("/", authMiddleware, async (req, res) => {
       }
 
       // 2) stock -= quantity
-      product.stock -= item.quantity;
+      product?.stock -= item.quantity;
 
       // 3) numberSold += quantity
       product.numberSold = (product.numberSold || 0) + item.quantity;

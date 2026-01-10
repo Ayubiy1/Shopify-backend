@@ -12,7 +12,6 @@ const router = express.Router();
 
 // TOKEN GENERATORS
 const generateAccessToken = (user) => {
- 
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
     expiresIn: "15m",
   });
@@ -32,7 +31,7 @@ router.get("/me", authMiddleware, (req, res) => {
 // REGISTER
 router.post("/register", async (req, res) => {
   try {
-    const { fullName, email, password, role } = req.body;
+    const { fullName, email, password, role, additionId } = req.body;
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser)
@@ -40,23 +39,45 @@ router.post("/register", async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
 
-    const newUser = new User({
-      fullName,
-      email: email.toLowerCase(),
-      password: hashed,
-      role: role || "buyer",
-    });
+    if (role !== "seller") {
+      const newUser = new User({
+        fullName,
+        email: email.toLowerCase(),
+        password: hashed,
+        role: role || "buyer" || "seller",
+      });
 
-    await newUser.save();
+      await newUser.save();
 
-    return res.status(201).json({
-      user: {
-        id: newUser._id,
-        fullName: newUser.fullName,
-        email: newUser.email,
-        role: newUser.role,
-      },
-    });
+      return res.status(201).json({
+        user: {
+          id: newUser._id,
+          fullName: newUser.fullName,
+          email: newUser.email,
+          role: newUser.role,
+        },
+      });
+    } else {
+      const newUserSeller = new User({
+        fullName,
+        email: email.toLowerCase(),
+        password: hashed,
+        additionId: additionId,
+        role: role || "buyer" || "seller",
+      });
+
+      await newUserSeller.save();
+
+      return res.status(201).json({
+        user: {
+          id: newUserSeller._id,
+          fullName: newUserSeller.fullName,
+          email: newUserSeller.email,
+          role: newUserSeller.role,
+          additionId: newUserSeller.additionId,
+        },
+      });
+    }
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: "Server error" });
@@ -96,6 +117,7 @@ router.post("/login", async (req, res) => {
         fullName: user.fullName,
         email: user.email,
         role: user.role,
+        additionId: user.additionId,
       },
     });
   } catch (err) {

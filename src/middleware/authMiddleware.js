@@ -17,8 +17,6 @@ const authMiddleware = async (req, res, next) => {
 
     if (!user) return res.status(401).json({ message: "Invalid user" });
 
-    console.log(user);
-
     req.user = user;
 
     next();
@@ -31,18 +29,44 @@ const authMiddleware = async (req, res, next) => {
 
 // Admin
 
-const adminMiddleware = (req, res, next) => {
-  if (req.user.role !== "admin") {
-    return res
-      .status(403)
-      .json({ message: "Ruxsat yo‘q. Faqat admin kirishi mumkin." });
+const adminMiddleware = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader)
+    return res.status(401).json({ message: "No token provided" });
+
+  const token = authHeader.split(" ")[1]; // "Bearer token" → token
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  // console.log("DECODED:", decoded);
+
+  const user = await User.findById(decoded.id);
+
+  if (!user) return res.status(401).json({ message: "Invalid user" });
+
+  if (user.role !== "admin") {
+    return res.status(403).json({ message: "Kirish uchun ruxsat yo‘q!!!" });
   }
   next();
 };
 
 // Seller
-const sellerMiddleware = (req, res, next) => {
-  if (req.user.role !== "seller" && req.user.role !== "admin") {
+const sellerMiddleware = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader)
+    return res.status(401).json({ message: "No token provided" });
+
+  const token = authHeader.split(" ")[1]; // "Bearer token" → token
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  // console.log("DECODED:", decoded);
+
+  const user = await User.findById(decoded.id);
+
+  if (!user) return res.status(401).json({ message: "Invalid user" });
+
+  if (user.role !== "seller") {
     return res
       .status(403)
       .json({ message: "Ruxsat yo‘q. Faqat seller kirishi mumkin." });

@@ -17,6 +17,7 @@ const stockHistorySchema = new mongoose.Schema(
     variants: Object,
     totalPrice: Number,
     date: Date,
+    sellerId: String,
   },
   { timestamps: true }
 );

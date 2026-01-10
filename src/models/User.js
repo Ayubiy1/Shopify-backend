@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
       default: "buyer",
     },
     googleId: { type: String }, // Google login uchun
+    additionId: String,
   },
   { timestamps: true }
 );
