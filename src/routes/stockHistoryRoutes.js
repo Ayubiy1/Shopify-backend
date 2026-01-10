@@ -62,7 +62,7 @@ router.post("/", authMiddleware, async (req, res) => {
       }
 
       // Stock yetadimi?
-      if (product?.stock < item.quantity) {
+      if (product.stock < item.quantity) {
         return res
           .status(400)
           .json({ message: `${product.name} uchun yetarli stock yo‘q` });
