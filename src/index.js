@@ -21,6 +21,9 @@ const stockHistory = require("./routes/stockHistoryRoutes");
 
 // Express app
 const app = express();
+app.get("/", function (req, res) {
+  res.send("welcome to express");
+});
 
 // Middlewares
 app.use(cookieParser());
