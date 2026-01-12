@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const Seller = require("../models/Seller");
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -62,11 +63,12 @@ const sellerMiddleware = async (req, res, next) => {
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   // console.log("DECODED:", decoded);
 
-  const user = await User.findById(decoded.id);
+  const seller = await Seller.findById(decoded.id);
+  console.log(seller);
 
-  if (!user) return res.status(401).json({ message: "Invalid user" });
+  if (!seller) return res.status(401).json({ message: "Invalid seller" });
 
-  if (user.role !== "seller") {
+  if (seller.role !== "seller") {
     return res
       .status(403)
       .json({ message: "Ruxsat yo‘q. Faqat seller kirishi mumkin." });

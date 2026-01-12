@@ -6,7 +6,9 @@ const {
   sellerMiddleware,
   adminMiddleware,
 } = require("../middleware/authMiddleware");
+const jwt = require("jsonwebtoken");
 const Category = require("../models/Category");
+const User = require("../models/User");
 
 // CREATE product (Seller yoki Admin)
 router.post("/", sellerMiddleware, async (req, res) => {
@@ -34,6 +36,28 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET all products only Seller (Token orqali productlarni Seller oladi)
+router.get("/seller", async (req, res) => {
+  console.log(req.headers.authorization);
+
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ message: "Token yo'q!" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const seller = await User.findById(decoded.id);
+
+    const products = await Product.find({ owner: seller?.additionId });
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -53,11 +77,13 @@ router.put("/:id", authMiddleware, sellerMiddleware, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
+    console.log(product.owner.toString() !== req.user._id.toString());
+
     if (!product) return res.status(404).json({ message: "Product not found" });
 
     // Agar seller bo‘lsa faqat o‘zini productini yangilay oladi
     if (
-      req.user.role === "seller" &&
+      req.user.role === "buyer" &&
       product.owner.toString() !== req.user._id.toString()
     ) {
       return res
