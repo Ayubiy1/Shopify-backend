@@ -7,7 +7,6 @@ const Corusel = require("../models/Corusel");
 
 // CREATE
 router.post("/", async (req, res) => {
-  console.log(req.body);
   try {
     const newCarousel = new Carousel(req.body);
 
@@ -43,8 +42,6 @@ router.get("/:id", async (req, res) => {
 
 // UPDATE
 router.put("/:id", upload.single("image"), async (req, res) => {
-  console.log(req.body);
-
   try {
     const data = {
       category: req.body.category,
@@ -57,7 +54,6 @@ router.put("/:id", upload.single("image"), async (req, res) => {
     const updated = await Corusel.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    console.log(updated);
 
     res.json(updated);
   } catch (err) {

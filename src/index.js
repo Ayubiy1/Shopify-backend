@@ -18,6 +18,7 @@ const korzinkaRouter = require("./routes/korzinkaRouter");
 const adminPanelRouter = require("./routes/adminPanelRouter");
 const sellerRouters = require("./routes/sellerRouters");
 const stockHistory = require("./routes/stockHistoryRoutes");
+const resetPassword = require("./routes/resetPassword");
 
 // Express app
 const app = express();
@@ -33,10 +34,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // CORS
 app.use(
   cors({
-    origin: [
-      "https://shopify-backend-vcnq.onrender.com",
-      "http://localhost:5173",
-    ],
+    origin: ["https://shopify-steel-two.vercel.app", "http://localhost:5173"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -53,6 +51,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/corusel", coruselRoutes);
 app.use("/api/sellers", sellerRouters);
 app.use("/api/stock-history", stockHistory);
+app.use("/api/reset-password", resetPassword);
 
 // MongoDB connection
 const MONGO_URI = process.env.MONGO_URI;

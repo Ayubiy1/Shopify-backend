@@ -4,11 +4,11 @@ const Product = require("../models/Product");
 const {
   authMiddleware,
   sellerMiddleware,
-  adminMiddleware,
 } = require("../middleware/authMiddleware");
 const jwt = require("jsonwebtoken");
 const Category = require("../models/Category");
 const User = require("../models/User");
+const Seller = require("../models/Seller");
 
 // CREATE product (Seller yoki Admin)
 router.post("/", sellerMiddleware, async (req, res) => {
@@ -38,7 +38,7 @@ router.get("/", async (req, res) => {
 
 // GET all products only Seller (Token orqali productlarni Seller oladi)
 router.get("/seller", async (req, res) => {
-  console.log(req.headers.authorization);
+  // console.log(req.headers.authorization);
 
   try {
     const authHeader = req.headers.authorization;
@@ -73,19 +73,31 @@ router.get("/:id", async (req, res) => {
 });
 
 // UPDATE product
-router.put("/:id", authMiddleware, sellerMiddleware, async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const authHeader = req.headers.authorization;
 
-    console.log(product.owner.toString() !== req.user._id.toString());
+    if (!authHeader)
+      return res.status(401).json({ message: "No token provided" });
+
+    const token = authHeader.split(" ")[1]; // "Bearer token" → token
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.id);
+    const seller = await Seller.findById(user.additionId);
+
+    const product = await Product.findById(req.params.id);
 
     if (!product) return res.status(404).json({ message: "Product not found" });
 
     // Agar seller bo‘lsa faqat o‘zini productini yangilay oladi
-    if (
-      req.user.role === "buyer" &&
-      product.owner.toString() !== req.user._id.toString()
-    ) {
+    if (seller.role === "buyer") {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to update this product" });
+    }
+    if (product.owner !== seller._id.toString()) {
       return res
         .status(403)
         .json({ message: "Not authorized to update this product" });
@@ -100,7 +112,32 @@ router.put("/:id", authMiddleware, sellerMiddleware, async (req, res) => {
   }
 });
 
+{
+  // router.put("/:id", sellerMiddleware, async (req, res) => {
+  //   console.log(req?.body?.owner);
+  //   try {
+  //     const product = await Product.findById(req.params.id);
+  //     if (!product) return res.status(404).json({ message: "Product not found" });
+  //     // Agar seller bo‘lsa faqat o‘zini productini yangilay oladi
+  //     if (
+  //       req.user.role === "buyer" &&
+  //       product.owner.toString() !== req?.body?.owner.toString()
+  //     ) {
+  //       return res
+  //         .status(403)
+  //         .json({ message: "Not authorized to update this product" });
+  //     }
+  //     Object.assign(product, req.body);
+  //     await product.save();
+  //     res.json(product);
+  //   } catch (error) {
+  //     res.status(500).json({ message: "Server error", error });
+  //   }
+  // });
+}
+
 // DELETE product
+
 router.delete("/:id", authMiddleware, sellerMiddleware, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);

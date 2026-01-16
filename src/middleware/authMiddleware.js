@@ -12,7 +12,6 @@ const authMiddleware = async (req, res, next) => {
     const token = authHeader.split(" ")[1]; // "Bearer token" → token
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // console.log("DECODED:", decoded);
 
     const user = await User.findById(decoded.id);
 
@@ -28,6 +27,22 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
+const authMiddlewarae = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // { _id, role, ... }
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Token invalid" });
+  }
+};
+
 // Admin
 
 const adminMiddleware = async (req, res, next) => {
@@ -39,7 +54,6 @@ const adminMiddleware = async (req, res, next) => {
   const token = authHeader.split(" ")[1]; // "Bearer token" → token
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  // console.log("DECODED:", decoded);
 
   const user = await User.findById(decoded.id);
 
@@ -61,12 +75,14 @@ const sellerMiddleware = async (req, res, next) => {
   const token = authHeader.split(" ")[1]; // "Bearer token" → token
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  // console.log("DECODED:", decoded);
 
-  const seller = await Seller.findById(decoded.id);
-  console.log(seller);
+  // const seller = await User.findById({ additionId: decoded.id.toString() });
+  const user = await User.findById(decoded.id);
+  // console.log(decoded.id);
+  const seller = await Seller.findById(user.additionId);
 
   if (!seller) return res.status(401).json({ message: "Invalid seller" });
+  // console.log(seller);
 
   if (seller.role !== "seller") {
     return res
