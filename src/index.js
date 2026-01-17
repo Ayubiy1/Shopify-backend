@@ -24,12 +24,20 @@ const app = express();
 /* 🔴 CORS — ENG BIRINCHI */
 app.use(
   cors({
-    origin: "https://shopify-steel-two.vercel.app",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    origin: ["http://localhost:5173", "https://shopify-steel-two.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// app.use(
+//   cors({
+//     origin: "https://shopify-steel-two.vercel.app",
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// );
 
 /* 🔴 PREFLIGHT */
 app.options("*", cors());

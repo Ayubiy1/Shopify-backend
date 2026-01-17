@@ -1,6 +1,9 @@
 const express = require("express");
 const Category = require("../models/Category");
-const { authMiddleware, adminMiddleware } = require("../middleware/authMiddleware");
+const {
+  authMiddleware,
+  adminMiddleware,
+} = require("../middleware/authMiddleware");
 // const {
 //   authMiddleware,
 //   adminMiddleware,
