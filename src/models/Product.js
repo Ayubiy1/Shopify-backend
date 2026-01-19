@@ -59,7 +59,7 @@ const productSchema = new mongoose.Schema(
     },
     owner: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Product", productSchema);

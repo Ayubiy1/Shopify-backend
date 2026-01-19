@@ -38,7 +38,7 @@ router.post("/buy", async (req, res) => {
     }
 
     const variant = foundProduct.variants.find(
-      (v) => v._id.toString() === variantId
+      (v) => v._id.toString() === variantId,
     );
 
     if (!variant) {

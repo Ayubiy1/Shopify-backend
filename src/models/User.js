@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
     googleId: { type: String }, // Google login uchun
     additionId: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("User", userSchema);
