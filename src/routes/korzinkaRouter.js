@@ -5,14 +5,32 @@ const Cart = require("../models/Korzinka").default;
 const { authMiddleware } = require("../middleware/authMiddleware");
 const User = require("../models/User");
 const Product = require("../models/Product");
-const Order = require("../models/Order");
 const StockHistory = require("../models/StockHistory");
 
 const router = express.Router();
 
 router.get("/me", authMiddleware, async (req, res) => {
   try {
-    const items = await Cart.find({ userId: req.user._id });
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        message: "Token mavjud emas",
+      });
+    }
+
+    // 2️⃣ Token ajratib olish
+    const token = authHeader.split(" ")[1];
+
+    // 3️⃣ Tokenni tekshirish
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // 4️⃣ User topish
+    const user = await User.findById(decoded.id).select("-password");
+
+    console.log(user._id);
+
+    const items = await Cart.find({ userId: user._id.toString() });
     res.json(items);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -136,6 +154,7 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 });
+
 // 🛒 USER CART
 router.get("/:userId", async (req, res) => {
   try {
