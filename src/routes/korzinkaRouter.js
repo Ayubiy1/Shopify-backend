@@ -84,9 +84,16 @@ router.post("/buy", async (req, res) => {
 // Karzinkaga qo'shish
 router.post("/add", authMiddleware, async (req, res) => {
   try {
-    const userId = req.user._id;
-    const { productId, combination, count, price, images, variantId, title } =
-      req.body;
+    const {
+      productId,
+      combination,
+      count,
+      price,
+      images,
+      variantId,
+      title,
+      userId,
+    } = req.body;
 
     const existing = await Cart.findOne({
       userId,
