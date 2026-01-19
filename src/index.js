@@ -27,7 +27,9 @@ app.use(
     origin: ["http://localhost:5173", "https://shopify-steel-two.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: false, // 🔴 TOKEN BO‘LGANI UCHUN FALSE
+    // credentials: false, // 🔴 TOKEN BO‘LGANI UCHUN FALSE
+    credentials: true, //access-control-allow-credentials:true
+    optionSuccessStatus: 200,
   }),
 );
 
@@ -35,7 +37,7 @@ app.use(
 //   cors({
 //     origin: "https://shopify-steel-two.vercel.app",
 //     credentials: true,
-//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+//     methods: ["GET", "PST", "PUT", "DELETE", "PATCH", "OPTIONS"],
 //     allowedHeaders: ["Content-Type", "Authorization"],
 //   })
 // );

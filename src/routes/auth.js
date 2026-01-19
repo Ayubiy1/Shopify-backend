@@ -135,7 +135,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     res.json({
@@ -269,53 +269,6 @@ router.post("/google", async (req, res) => {
   }
 });
 
-{
-  // router.post("/google", async (req, res) => {
-  //   const { token } = req.body;
-  //   try {
-  //     console.log("Token:", token);
-  //     console.log("Backend Client ID:", process.env.GOOGLE_CLIENT_ID);
-  //     const ticket = await client.verifyIdToken({
-  //       idToken: token,
-  //       audience: process.env.GOOGLE_CLIENT_ID, // frontend Client ID bilan bir xil
-  //     });
-  //     const payload = ticket.getPayload();
-  //     const { email, name, sub: googleId } = payload;
-  //     let user = await User.findOne({ email });
-  //     if (!user) {
-  //       user = await User.create({
-  //         fullName: name,
-  //         email,
-  //         googleId,
-  //         password: null,
-  //       });
-  //     }
-  //     const accessToken = generateAccessToken(user);
-  //     const refreshToken = generateRefreshToken(user);
-  //     user.refreshToken = refreshToken;
-  //     await user.save();
-  //     res.cookie(token, accessToken, {
-  //       httpOnly: true,
-  //       secure: true,
-  //       sameSite: true,
-  //       maxAge: 60 * 60 * 1000,
-  //     });
-  //     res.json({
-  //       accessToken,
-  //       refreshToken,
-  //       user: {
-  //         id: user._id,
-  //         fullName: user.fullName,
-  //         email: user.email,
-  //         role: user.role,
-  //       },
-  //     });
-  //   } catch (err) {
-  //     console.error(err);
-  //     res.status(401).json({ message: "Invalid token" });
-  //   }
-  // });
-}
 // REFRESH TOKEN
 router.post("/refresh-token", async (req, res) => {
   const { refreshToken } = req.body;
@@ -364,3 +317,51 @@ router.post("/logout", authMiddleware, async (req, res) => {
 });
 
 module.exports = router;
+
+{
+  // router.post("/google", async (req, res) => {
+  //   const { token } = req.body;
+  //   try {
+  //     console.log("Token:", token);
+  //     console.log("Backend Client ID:", process.env.GOOGLE_CLIENT_ID);
+  //     const ticket = await client.verifyIdToken({
+  //       idToken: token,
+  //       audience: process.env.GOOGLE_CLIENT_ID, // frontend Client ID bilan bir xil
+  //     });
+  //     const payload = ticket.getPayload();
+  //     const { email, name, sub: googleId } = payload;
+  //     let user = await User.findOne({ email });
+  //     if (!user) {
+  //       user = await User.create({
+  //         fullName: name,
+  //         email,
+  //         googleId,
+  //         password: null,
+  //       });
+  //     }
+  //     const accessToken = generateAccessToken(user);
+  //     const refreshToken = generateRefreshToken(user);
+  //     user.refreshToken = refreshToken;
+  //     await user.save();
+  //     res.cookie(token, accessToken, {
+  //       httpOnly: true,
+  //       secure: true,
+  //       sameSite: true,
+  //       maxAge: 60 * 60 * 1000,
+  //     });
+  //     res.json({
+  //       accessToken,
+  //       refreshToken,
+  //       user: {
+  //         id: user._id,
+  //         fullName: user.fullName,
+  //         email: user.email,
+  //         role: user.role,
+  //       },
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //     res.status(401).json({ message: "Invalid token" });
+  //   }
+  // });
+}

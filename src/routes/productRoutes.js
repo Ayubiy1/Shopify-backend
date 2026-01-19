@@ -28,7 +28,7 @@ router.get("/", async (req, res) => {
   try {
     const products = await Product.find().populate(
       "owner",
-      "fullName email role"
+      "fullName email role",
     );
     res.json(products);
   } catch (error) {
@@ -111,30 +111,6 @@ router.put("/:id", async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 });
-
-{
-  // router.put("/:id", sellerMiddleware, async (req, res) => {
-  //   console.log(req?.body?.owner);
-  //   try {
-  //     const product = await Product.findById(req.params.id);
-  //     if (!product) return res.status(404).json({ message: "Product not found" });
-  //     // Agar seller bo‘lsa faqat o‘zini productini yangilay oladi
-  //     if (
-  //       req.user.role === "buyer" &&
-  //       product.owner.toString() !== req?.body?.owner.toString()
-  //     ) {
-  //       return res
-  //         .status(403)
-  //         .json({ message: "Not authorized to update this product" });
-  //     }
-  //     Object.assign(product, req.body);
-  //     await product.save();
-  //     res.json(product);
-  //   } catch (error) {
-  //     res.status(500).json({ message: "Server error", error });
-  //   }
-  // });
-}
 
 // DELETE product
 
