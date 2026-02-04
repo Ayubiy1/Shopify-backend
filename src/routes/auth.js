@@ -216,9 +216,9 @@ router.post("/login", async (req, res) => {
 }
 
 router.post("/google", async (req, res) => {
-  const { token } = req.body;
-
   try {
+    const { token } = req.body;
+
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,

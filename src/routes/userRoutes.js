@@ -45,7 +45,7 @@ router.put("/:id", async (req, res) => {
 
     const updateData = { ...req.body };
 
-    if (updateData.password?.trim()) {
+    if (updateData?.password?.trim()) {
       const salt = await bcrypt.genSalt(10);
       updateData.password = await bcrypt.hash(updateData.password, salt);
     } else {
@@ -67,26 +67,6 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// router.put("/:id", async (req, res) => {
-//   console.log(req.body);
-//   console.log(req.params.id);
-
-//   try {
-//     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-//       new: true,
-//     });
-
-//     if (!updatedUser)
-//       return res.status(404).json({ message: "User not found" });
-
-//     res.json(updatedUser);
-
-//     //
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error" });
-//   }
-// });
-
 // Userni o'chirish
 router.delete("/:id", async (req, res) => {
   try {
@@ -101,25 +81,3 @@ router.delete("/:id", async (req, res) => {
 });
 
 module.exports = router;
-
-{
-  // router.post("/auth/google", async (req, res) => {
-  //   const { token } = req.body;
-  //   try {
-  //     const ticket = await client.verifyIdToken({
-  //       idToken: token,
-  //       audience: process.env.GOOGLE_CLIENT_ID,
-  //     });
-  //     const payload = ticket.getPayload();
-  //     const { email, name, sub: googleId } = payload;
-  //     // Foydalanuvchini tekshirish yoki yaratish
-  //     let user = await User.findOne({ email });
-  //     if (!user) {
-  //       user = await User.create({ name, email, googleId });
-  //     }
-  //     res.json(user);
-  //   } catch (err) {
-  //     res.status(401).json({ message: "Invalid token" });
-  //   }
-  // });
-}
