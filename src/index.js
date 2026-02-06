@@ -24,7 +24,11 @@ const app = express();
 /* 🔴 CORS — ENG BIRINCHI */
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://shopify-steel-two.vercel.app"],
+    origin: [
+      "http://localhost:5173",
+      "https://shopify-steel-two.vercel.app",
+      "https://shopifiy.uz/",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     // credentials: false, // 🔴 TOKEN BO‘LGANI UCHUN FALSE
