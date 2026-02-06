@@ -27,7 +27,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://shopify-steel-two.vercel.app",
-      "https://shopifiy.uz/",
+      "https://shopifiy.uz",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
