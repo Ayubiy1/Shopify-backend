@@ -37,7 +37,7 @@ const orderSchema = new mongoose.Schema(
       default: "karta",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Order", orderSchema);
