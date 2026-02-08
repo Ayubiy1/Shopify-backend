@@ -194,3 +194,214 @@
   //   })
   //   .catch((err) => console.error("❌ MongoDB connection error:", err));
 }
+
+{
+  // router.post("/register", async (req, res) => {
+  //   try {
+  //     const { fullName, email, password, role, additionId } = req.body;
+  //     const existingUser = await User.findOne({ email: email.toLowerCase() });
+  //     if (existingUser)
+  //       return res.status(400).json({ message: "User already exists" });
+  //     const hashed = await bcrypt.hash(password, 10);
+  //     if (role !== "seller") {
+  //       const newUser = new User({
+  //         fullName,
+  //         email: email.toLowerCase(),
+  //         password: hashed,
+  //         role: role || "buyer" || "seller",
+  //       });
+  //       await newUser.save();
+  //       return res.status(201).json({
+  //         user: {
+  //           id: newUser._id,
+  //           fullName: newUser.fullName,
+  //           email: newUser.email,
+  //           role: newUser.role,
+  //         },
+  //       });
+  //     } else {
+  //       const newUserSeller = new User({
+  //         fullName,
+  //         email: email.toLowerCase(),
+  //         password: hashed,
+  //         additionId: additionId,
+  //         role: role || "buyer" || "seller",
+  //       });
+  //       await newUserSeller.save();
+  //       return res.status(201).json({
+  //         user: {
+  //           id: newUserSeller._id,
+  //           fullName: newUserSeller.fullName,
+  //           email: newUserSeller.email,
+  //           role: newUserSeller.role,
+  //           additionId: newUserSeller.additionId,
+  //         },
+  //       });
+  //     }
+  //   } catch (e) {
+  //     console.error(e);
+  //     res.status(500).json({ message: "Server error" });
+  //   }
+  // });
+}
+
+{
+  // router.post("/login", async (req, res) => {
+  //   try {
+  //     const { email, password } = req.body;
+  //     const user = await User.findOne({ email });
+  //     if (!user) return res.status(400).json({ message: "User not found" });
+  //     const isMatch = await bcrypt.compare(password, user.password);
+  //     if (!isMatch) return res.status(400).json({ message: "Wrong password" });
+  //     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  //       expiresIn: "7d",
+  //     });
+  //     // 🔴 COOKIE YO‘Q
+  //     res.json({
+  //       token,
+  //       user: {
+  //         id: user._id,
+  //         email: user.email,
+  //         role: user.role,
+  //       },
+  //     });
+  //   } catch (err) {
+  //     res.status(500).json({ message: "Login error" });
+  //   }
+  // });
+}
+
+{
+  // router.post("/login", async (req, res) => {
+  //   try {
+  //     const { email, password } = req.body;
+  //     const user = await User.findOne({ email: email.toLowerCase() });
+  //     if (!user) return res.status(400).json({ message: "Email topilmadi" });
+  //     const isMatch = await bcrypt.compare(password, user.password);
+  //     if (!isMatch) return res.status(400).json({ message: "Parol noto'g'ri" });
+  //     const accessToken = generateAccessToken(user);
+  //     const refreshToken = generateRefreshToken(user);
+  //     user.refreshToken = refreshToken;
+  //     await user.save();
+  //     // 🍪 COOKIE
+  //     res.cookie("token", accessToken, {
+  //       httpOnly: true,
+  //       secure: true,
+  //       sameSite: "none",
+  //       maxAge: 60 * 60 * 1000,
+  //     });
+  //     return res.json({
+  //       accessToken, // 🔥 TOKEN FRONTENDGA KETADI!
+  //       refreshToken,
+  //       user: {
+  //         id: user._id,
+  //         fullName: user.fullName,
+  //         email: user.email,
+  //         role: user.role,
+  //         additionId: user.additionId,
+  //       },
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //     res.status(500).json({ message: "Server error" });
+  //   }
+  // });
+}
+
+{
+  // router.post("/google", async (req, res) => {
+  //   try {
+  //     const { token } = req.body;
+  //     const ticket = await client.verifyIdToken({
+  //       idToken: token,
+  //       audience: process.env.GOOGLE_CLIENT_ID,
+  //     });
+  //     const payload = ticket.getPayload();
+  //     const { email, name, sub: googleId } = payload;
+  //     let user = await User.findOne({ email });
+  //     // Yangi user yaratamiz
+  //     console.log(user);
+  //     if (!user) {
+  //       user = await User.create({
+  //         fullName: name,
+  //         email,
+  //         googleId,
+  //       });
+  //     }
+  //     // TOKENLAR GENERATSIYASI
+  //     const accessToken = generateAccessToken(user);
+  //     const refreshToken = generateRefreshToken(user);
+  //     user.refreshToken = refreshToken;
+  //     await user.save();
+  //     // COOKIEga ACCESS TOKEN YOZILADI
+  //     res.cookie("token", accessToken, {
+  //       httpOnly: true,
+  //       secure: true,
+  //       sameSite: "none",
+  //       maxAge: 60 * 60 * 1000,
+  //     });
+  //     return res.json({
+  //       accessToken,
+  //       refreshToken,
+  //       user: {
+  //         id: user._id,
+  //         fullName: user.fullName,
+  //         email: user.email,
+  //         role: user.role,
+  //       },
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //     res.status(401).json({ message: "Invalid Google token" });
+  //   }
+  // });
+  // REFRESH TOKEN
+}
+
+{
+  // router.post("/google", async (req, res) => {
+  //   const { token } = req.body;
+  //   try {
+  //     console.log("Token:", token);
+  //     console.log("Backend Client ID:", process.env.GOOGLE_CLIENT_ID);
+  //     const ticket = await client.verifyIdToken({
+  //       idToken: token,
+  //       audience: process.env.GOOGLE_CLIENT_ID, // frontend Client ID bilan bir xil
+  //     });
+  //     const payload = ticket.getPayload();
+  //     const { email, name, sub: googleId } = payload;
+  //     let user = await User.findOne({ email });
+  //     if (!user) {
+  //       user = await User.create({
+  //         fullName: name,
+  //         email,
+  //         googleId,
+  //         password: null,
+  //       });
+  //     }
+  //     const accessToken = generateAccessToken(user);
+  //     const refreshToken = generateRefreshToken(user);
+  //     user.refreshToken = refreshToken;
+  //     await user.save();
+  //     res.cookie(token, accessToken, {
+  //       httpOnly: true,
+  //       secure: true,
+  //       sameSite: true,
+  //       maxAge: 60 * 60 * 1000,
+  //     });
+  //     res.json({
+  //       accessToken,
+  //       refreshToken,
+  //       user: {
+  //         id: user._id,
+  //         fullName: user.fullName,
+  //         email: user.email,
+  //         role: user.role,
+  //       },
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //     res.status(401).json({ message: "Invalid token" });
+  //   }
+  // });
+}
