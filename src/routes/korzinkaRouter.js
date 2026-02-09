@@ -28,8 +28,6 @@ router.get("/me", authMiddleware, async (req, res) => {
     // 4️⃣ User topish
     const user = await User.findById(decoded.id).select("-password");
 
-    console.log(user._id);
-
     const items = await Cart.find({ userId: user._id.toString() });
     res.json(items);
   } catch (err) {
@@ -42,53 +40,55 @@ router.post("/buy", async (req, res) => {
   try {
     const {
       product,
-      variantId,
+      variants, // 👈 { color, size }
       quantity,
-      variants,
       totalPrice,
       paymentMethod,
       title,
     } = req.body;
+
+    console.log(req.body);
 
     const foundProduct = await Product.findById(product);
     if (!foundProduct) {
       return res.status(400).json({ message: "Product topilmadi" });
     }
 
-    const variant = foundProduct.variants.find(
-      (v) => v._id.toString() === variantId,
+    // ✅ COMBINATION ORQALI VARIANT TOPISH
+    const foundVariant = foundProduct.variants.find(
+      (v) =>
+        v?.combination?.color === variants?.color &&
+        v?.combination?.size === variants?.size,
     );
 
-    if (!variant) {
+    if (!foundVariant) {
       return res.status(400).json({ message: "Variant topilmadi" });
     }
 
-    if (variant.stock < quantity) {
+    if (foundVariant.stock < quantity) {
       return res
         .status(400)
         .json({ message: "Variantda yetarli mahsulot yo‘q" });
     }
 
-    variant.stock -= quantity;
-    variant.numberSold = (variant.numberSold || 0) + quantity;
+    // ✅ STOCK UPDATE
+    foundVariant.stock -= quantity;
+    foundVariant.numberSold = (foundVariant.numberSold || 0) + quantity;
 
-    // === STOCK HISTORY YOZISH ===
-
-    const history = await StockHistory.create({
+    // ✅ HISTORY
+    await StockHistory.create({
       productId: foundProduct._id,
-      variantId: variantId || null,
+      variantId: foundVariant._id || null,
       title,
       changed: -quantity,
       reason: "buy",
       paymentMethod,
-      variants,
+      variant: foundVariant.combination,
       totalPrice,
       date: new Date(),
     });
 
     await foundProduct.save();
-
-    await history.save();
 
     return res.json({
       message: "Xarid muvaffaqiyatli amalga oshirildi!",
@@ -98,6 +98,59 @@ router.post("/buy", async (req, res) => {
     res.status(500).json({ error: "Server xatosi" });
   }
 });
+
+{
+  // router.post("/buy", async (req, res) => {
+  //   try {
+  //     const {
+  //       product,
+  //       variantId,
+  //       quantity,
+  //       variants,
+  //       totalPrice,
+  //       paymentMethod,
+  //       title,
+  //     } = req.body;
+  //     const foundProduct = await Product.findById(product);
+  //     if (!foundProduct) {
+  //       return res.status(400).json({ message: "Product topilmadi" });
+  //     }
+  //     const variant = foundProduct.variants.find(
+  //       (v) => v._id.toString() === product,
+  //     );
+  //     if (!variant) {
+  //       return res.status(400).json({ message: "Variant topilmadi" });
+  //     }
+  //     if (variant.stock < quantity) {
+  //       return res
+  //         .status(400)
+  //         .json({ message: "Variantda yetarli mahsulot yo‘q" });
+  //     }
+  //     variant.stock -= quantity;
+  //     variant.numberSold = (variant.numberSold || 0) + quantity;
+  //     // === STOCK HISTORY YOZISH ===
+  //     const history = await StockHistory.create({
+  //       productId: foundProduct._id,
+  //       variantId: variantId || null,
+  //       title,
+  //       changed: -quantity,
+  //       reason: "buy",
+  //       paymentMethod,
+  //       variants,
+  //       totalPrice,
+  //       date: new Date(),
+  //     });
+  //     await foundProduct.save();
+  //     await history.save();
+  //     return res.json({
+  //       message: "Xarid muvaffaqiyatli amalga oshirildi!",
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).json({ error: "Server xatosi" });
+  //   }
+  // });
+}
 
 // Karzinkaga qo'shish
 router.post("/add", authMiddleware, async (req, res) => {
